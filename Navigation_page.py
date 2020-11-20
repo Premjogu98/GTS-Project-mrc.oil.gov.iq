@@ -11,43 +11,22 @@ import requests
 import urllib.request
 import urllib.parse
 import re
-
+import html
+import wx
+app = wx.App()
 
 def ChromeDriver():
-    File_Location = open("D:\\0 PYTHON EXE SQL CONNECTION & DRIVER PATH\\mrc.oil.gov.iq\\Location For Database & Driver.txt", "r")
-    TXT_File_AllText = File_Location.read()
-    Chromedriver = str(TXT_File_AllText).partition("Driver=")[2].partition("\")")[0].strip()
-    # chrome_options = Options()
-    # chrome_options.add_extension('D:\\0 PYTHON EXE SQL CONNECTION & DRIVER PATH\\mrc.oil.gov.iq\\Browsec-VPN.crx')  # ADD EXTENSION Browsec-VPN
-    # browser = webdriver.Chrome(executable_path=str(Chromedriver),
-    #                            chrome_options=chrome_options)
-    browser = webdriver.Chrome(executable_path=str(Chromedriver))
-    browser.get(
-        """https://chrome.google.com/webstore/detail/browsec-vpn-free-and-unli/omghfjlpggmjjaagoclmmobgdodcjboh?hl=en" ping="/url?sa=t&amp;source=web&amp;rct=j&amp;url=https://chrome.google.com/webstore/detail/browsec-vpn-free-and-unli/omghfjlpggmjjaagoclmmobgdodcjboh%3Fhl%3Den&amp;ved=2ahUKEwivq8rjlcHmAhVtxzgGHZ-JBMgQFjAAegQIAhAB""")
-    for Add_Extension in browser.find_elements_by_xpath('/html/body/div[4]/div[2]/div/div/div[2]/div[2]/div'):
-        Add_Extension.click()
-        break
-    import wx
-    app = wx.App()
-    wx.MessageBox(' -_-  Add Extension and Select Proxy Between 25 SEC -_- ', 'Info', wx.OK | wx.ICON_WARNING)
-    time.sleep(25)  # WAIT UNTIL CHANGE THE MANUAL VPN SETTING
-    browser.get("https://mrc.oil.gov.iq/index.php?name=monaksa")
-    browser.set_window_size(1024, 600)
+    chrome_options = Options()
+    chrome_options.add_extension('C:\\BrowsecVPN.crx')
+    browser = webdriver.Chrome(executable_path=str(f"C:\\chromedriver.exe"),chrome_options=chrome_options)
     browser.maximize_window()
-    # browser.switch_to.window(browser.window_handles[1])
-    # browser.close()
-    # browser.switch_to.window(browser.window_handles[0])
-    # time.sleep(2)
-    time.sleep(1)
-    # time.sleep(20)  # WAIT UNTIL CHANGE THE MANUAL VPN SETTING
-    # browser.get('https://mrc.oil.gov.iq/index.php?name=monaksa')
-
-    # browser.set_window_size(1024 , 600)
-    # browser.maximize_window()
-
-    # browser.switch_to.window(browser.window_handles[1])
-    # browser.close()
-    # browser.switch_to.window(browser.window_handles[0])
+    # browser.get("""https://chrome.google.com/webstore/detail/browsec-vpn-free-and-unli/omghfjlpggmjjaagoclmmobgdodcjboh?hl=en" ping="/url?sa=t&amp;source=web&amp;rct=j&amp;url=https://chrome.google.com/webstore/detail/browsec-vpn-free-and-unli/omghfjlpggmjjaagoclmmobgdodcjboh%3Fhl%3Den&amp;ved=2ahUKEwivq8rjlcHmAhVtxzgGHZ-JBMgQFjAAegQIAhAB""")
+    wx.MessageBox(' -_-  Add Extension and Select Proxy Between 10 SEC -_- ', 'Info', wx.OK | wx.ICON_WARNING)
+    time.sleep(15)  # WAIT UNTIL CHANGE THE MANUAL VPN SETtING
+    browser.get("https://mrc.oil.gov.iq/")
+    wx.MessageBox(' -_-  Fill the Captcha if there -_- ', 'Info', wx.OK | wx.ICON_WARNING)
+    browser.get("https://mrc.oil.gov.iq/index.php?name=monaksa")
+    time.sleep(2)
     a = True
     while a == True:
         try:
@@ -81,23 +60,23 @@ def ChromeDriver():
             a = True
 
 
-def Translate(text_without_translate):
-    String2 = ""
-    try:
-        String2 = str(text_without_translate)
-        url = "https://translate.google.com/m?hl=en&sl=auto&tl=en&ie=UTF-8&prev=_m&q=" + str(String2) + ""
-        response1 = requests.get(str(url))
-        response2 = response1.url
-        user_agent = 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/76.0.3809.100 Safari/537.36'
-        headers = {'User-Agent': user_agent , }
-        request = urllib.request.Request(response2 , None , headers)  # The assembled request
-        time.sleep(2)
-        response = urllib.request.urlopen(request)
-        htmldata: str = response.read().decode('utf-8')
-        trans_data = re.search(r'(?<=dir="ltr" class="t0">).*?(?=</div>)' , htmldata).group(0)
-        return trans_data
-    except:
-        return String2
+# def Translate(text_without_translate):
+#     String2 = ""
+#     try:
+#         String2 = str(text_without_translate)
+#         url = "https://translate.google.com/m?hl=en&sl=auto&tl=en&ie=UTF-8&prev=_m&q=" + str(String2) + ""
+#         response1 = requests.get(str(url))
+#         response2 = response1.url
+#         user_agent = 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/76.0.3809.100 Safari/537.36'
+#         headers = {'User-Agent': user_agent , }
+#         request = urllib.request.Request(response2 , None , headers)  # The assembled request
+#         time.sleep(2)
+#         response = urllib.request.urlopen(request)
+#         htmldata: str = response.read().decode('utf-8')
+#         trans_data = re.search(r'(?<=dir="ltr" class="t0">).*?(?=</div>)' , htmldata).group(0)
+#         return trans_data
+#     except:
+#         return String2
 
 
 def Scrap_data(browser, Tender_href):
@@ -109,7 +88,7 @@ def Scrap_data(browser, Tender_href):
                 browser.get(href)
                 Global_var.Total += 1
                 SegFeild = []
-                for data in range(42):
+                for data in range(45):
                     SegFeild.append('')
 
                 get_htmlSource = ""
@@ -124,12 +103,12 @@ def Scrap_data(browser, Tender_href):
                 #     Name_of_Directorate = Translate(Name_of_Directorate)
                 #     SegFeild[12] = Name_of_Directorate.strip().upper()
                 #     break
-                SegFeild[12] = "Midland Refineries Company (MRC)"
+                SegFeild[12] = "MIDLAND REFINERIES COMPANY (MRC)"
                 SegFeild[8] = "https://mrc.oil.gov.iq/"
                 # Title
                 for Tender_Subject in browser.find_elements_by_xpath('/html/body/div/center/table/tbody/tr[6]/td/table[1]/tbody/tr/td[2]/center/table/tbody/tr[3]/td[2]'):
                     Tender_Subject = Tender_Subject.get_attribute('innerText').replace('&nbsp;', '').strip()
-                    Tender_Subject = Translate(Tender_Subject)
+                    # Tender_Subject = Translate(Tender_Subject)
                     Tender_Subject = Tender_Subject.lstrip('(').rstrip(')').lstrip('-').rstrip('-').lstrip('\"').rstrip('\"').replace('(', '').replace(')', '').replace('.', '').replace('-', '')
                     Tender_Subject = string.capwords(str(Tender_Subject)).strip()
                     SegFeild[19] = Tender_Subject
@@ -157,8 +136,8 @@ def Scrap_data(browser, Tender_href):
                 Extention_Date = ""
                 for Extention_Date in browser.find_elements_by_xpath('/html/body/div/center/table/tbody/tr[6]/td/table[1]/tbody/tr/td[2]/center/table/tbody/tr[8]/td[2]'):
                     Extention_Date = Extention_Date.get_attribute('innerText').replace('&nbsp;', '').strip()
-                    Extention_Date = Translate(Extention_Date)
-                    if Extention_Date == "Extension does not have":
+                    # Extention_Date = Translate(Extention_Date)
+                    if Extention_Date == "تمديد":
                         Extention_Date = ""
                     else:pass
                     break
@@ -179,7 +158,7 @@ def Scrap_data(browser, Tender_href):
                 except:
                     SegFeild[24] = ""
 
-                Tender_Details = "Subject: " + str(SegFeild[19]) + "<br>\n""Directorate_Name: " + str(SegFeild[12]) + "<br>\n""Release Date: " + str(Release_Date) + "<br>\n""Extention Date: " + str(Extention_Date) + "<br>\n""Close Date: " + str(SegFeild[24])
+                Tender_Details = "موضوع: " + str(SegFeild[19]) + "<br>\n""اسم المديرية: " + str(SegFeild[12]) + "<br>\n""الافراج اليوم: " + str(Release_Date) + "<br>\n""تاريخ التمديد: " + str(Extention_Date) + "<br>\n""قريب تواريخ: " + str(SegFeild[24])
                 Tender_Details = string.capwords(str(Tender_Details)).strip()
                 SegFeild[18] = Tender_Details.replace(',','')
 
@@ -197,21 +176,19 @@ def Scrap_data(browser, Tender_href):
                 SegFeild[27] = "0"  # Financier
 
                 SegFeild[28] = str(href)
+                SegFeild[20] = ""
+                SegFeild[21] = "" 
+                SegFeild[42] = SegFeild[7]
+                SegFeild[43] = "" 
 
                 # Source Name
                 SegFeild[31] = 'mrc.oil.gov.iq'
 
-                for Segdata in range(len(SegFeild)):
-                    print(Segdata, end=' ')
-                    print(SegFeild[Segdata])
-                    SegFeild = [SegFeild.replace("&quot;", "\"") for SegFeild in SegFeild]
-                    SegFeild = [SegFeild.replace("&QUOT;", "\"") for SegFeild in SegFeild]
-                    SegFeild = [SegFeild.replace("&nbsp;", " ") for SegFeild in SegFeild]
-                    SegFeild = [SegFeild.replace("&NBSP;", " ") for SegFeild in SegFeild]
-                    SegFeild = [SegFeild.replace("&amp;amp", "&") for SegFeild in SegFeild]
-                    SegFeild = [SegFeild.replace("&AMP;AMP", "&") for SegFeild in SegFeild]
-                    SegFeild = [SegFeild.replace("&amp;", "&") for SegFeild in SegFeild]
-                    SegFeild = [SegFeild.replace("&AMP;", "&") for SegFeild in SegFeild]
+                for SegIndex in range(len(SegFeild)):
+                    print(SegIndex, end=' ')
+                    print(SegFeild[SegIndex])
+                    SegFeild[SegIndex] = html.unescape(str(SegFeild[SegIndex]))
+                    SegFeild[SegIndex] = str(SegFeild[SegIndex]).replace("'", "''")
                 a = False
                 check_date(get_htmlSource, SegFeild)
                 print(" Total: " + str(Global_var.Total) + " Duplicate: " + str(
